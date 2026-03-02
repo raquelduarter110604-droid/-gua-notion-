@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Rastreador de Água</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 50px;
+}
+
+.copo {
+  width: 100px;
+  height: 300px;
+  border: 2px solid #3498db;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  background: #f0f0f0;
+  margin-bottom: 20px;
+}
+
+.agua {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 0;
+  background: linear-gradient(to top, #3498db, #5dade2);
+  transition: height 0.3s;
+}
+
+input, button {
+  padding: 8px;
+  font-size: 14px;
+  margin: 5px;
+}
+</style>
+</head>
+<body>
+
+<h2>Rastreador de Água</h2>
+
+<div class="copo">
+  <div class="agua" id="agua"></div>
+</div>
+
+<label>Adicionar água (ml): </label>
+<input type="number" id="ml" min="1" step="1">
+<button onclick="adicionarAgua()">Adicionar</button>
+
+<p>Total bebido: <span id="total">0</span> ml</p>
+
+<script>
+let total = 0;
+const capacidade = 1000; // copo de 1 litro
+const agua = document.getElementById('agua');
+const totalSpan = document.getElementById('total');
+
+function adicionarAgua() {
+  const ml = parseInt(document.getElementById('ml').value);
+  if (!ml || ml <= 0) return;
+  
+  total += ml;
+  if (total > capacidade) total = capacidade; // não passar do copo
+
+  // altura proporcional
+  const altura = (total / capacidade) * 100;
+  agua.style.height = altura + '%';
+  
+  totalSpan.textContent = total;
+}
+</script>
+
+</body>
+</html>

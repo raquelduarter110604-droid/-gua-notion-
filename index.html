@@ -97,10 +97,34 @@ button:hover {
 <script>
 const capacidade = 2000; // 2 litros
 let total = 0;
-
 const agua = document.getElementById('agua');
 const totalSpan = document.getElementById('total');
 
+// Função para pegar a data atual como string "YYYY-MM-DD"
+function dataHoje() {
+  const d = new Date();
+  return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+}
+
+// Inicializar total diário
+let dataSalva = localStorage.getItem('dataAgua');
+if (dataSalva === dataHoje()) {
+  total = parseInt(localStorage.getItem('totalAgua')) || 0;
+} else {
+  total = 0; // novo dia → zera
+  localStorage.setItem('dataAgua', dataHoje());
+  localStorage.setItem('totalAgua', total);
+}
+
+// Atualiza a altura e o texto do copo
+function atualizarCopo() {
+  const altura = (total / capacidade) * 100;
+  agua.style.height = altura + '%';
+  totalSpan.textContent = total;
+}
+atualizarCopo();
+
+// Função para adicionar água
 function adicionarAgua() {
   const ml = parseInt(document.getElementById('ml').value);
   if (!ml || ml <= 0) return;
@@ -108,13 +132,18 @@ function adicionarAgua() {
   total += ml;
   if (total > capacidade) total = capacidade;
 
-  const altura = (total / capacidade) * 100;
-  agua.style.height = altura + '%';
-  totalSpan.textContent = total;
+  // Salvar no localStorage
+  localStorage.setItem('totalAgua', total);
+  localStorage.setItem('dataAgua', dataHoje());
 
+  // Atualizar copo
+  atualizarCopo();
+
+  // Criar bolhas discretas
   criarBolhas(ml);
 }
 
+// Cria bolhas conforme ml adicionado
 function criarBolhas(ml) {
   for (let i = 0; i < Math.min(ml/20, 5); i++) { // max 5 bolhas por clique
     const bolha = document.createElement('div');

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <title>Rastreador de Água</title>
@@ -10,38 +10,76 @@ body {
   flex-direction: column;
   align-items: center;
   margin: 50px;
+  background: #e0f7fa;
 }
 
+h2 {
+  color: #0077b6;
+}
+
+/* Copo */
 .copo {
-  width: 100px;
-  height: 300px;
-  border: 2px solid #3498db;
-  border-radius: 10px;
+  width: 120px;
+  height: 400px;
+  border: 3px solid #0077b6;
+  border-radius: 15px;
   overflow: hidden;
   position: relative;
   background: #f0f0f0;
   margin-bottom: 20px;
 }
 
+/* Água */
 .agua {
   position: absolute;
   bottom: 0;
   width: 100%;
   height: 0;
-  background: linear-gradient(to top, #3498db, #5dade2);
+  background: linear-gradient(to top, #0096c7, #48cae4);
   transition: height 0.3s;
+  overflow: hidden;
 }
 
+/* Bolhas */
+.bolha {
+  position: absolute;
+  bottom: 0;
+  width: 8px;
+  height: 8px;
+  background: rgba(255,255,255,0.7);
+  border-radius: 50%;
+  animation: subir 3s linear infinite;
+  opacity: 0.8;
+}
+
+@keyframes subir {
+  0% { transform: translateY(0) scale(1); opacity: 0.8; }
+  100% { transform: translateY(-400px) scale(0.5); opacity: 0; }
+}
+
+/* Inputs */
 input, button {
   padding: 8px;
   font-size: 14px;
   margin: 5px;
+  border-radius: 5px;
+  border: 1px solid #0077b6;
+}
+
+button {
+  background: #0077b6;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0096c7;
 }
 </style>
 </head>
 <body>
 
-<h2>Rastreador de Água</h2>
+<h2>Meta: 2 Litros de Água</h2>
 
 <div class="copo">
   <div class="agua" id="agua"></div>
@@ -54,23 +92,42 @@ input, button {
 <p>Total bebido: <span id="total">0</span> ml</p>
 
 <script>
+const capacidade = 2000; // 2 litros = 2000 ml
 let total = 0;
-const capacidade = 1000; // copo de 1 litro
+
 const agua = document.getElementById('agua');
 const totalSpan = document.getElementById('total');
+const copo = document.querySelector('.copo');
 
 function adicionarAgua() {
   const ml = parseInt(document.getElementById('ml').value);
   if (!ml || ml <= 0) return;
-  
-  total += ml;
-  if (total > capacidade) total = capacidade; // não passar do copo
 
-  // altura proporcional
+  total += ml;
+  if (total > capacidade) total = capacidade;
+
   const altura = (total / capacidade) * 100;
   agua.style.height = altura + '%';
-  
   totalSpan.textContent = total;
+
+  criarBolhas(ml);
+}
+
+// Cria bolhas conforme ml
+function criarBolhas(ml) {
+  for (let i = 0; i < Math.min(ml/20, 10); i++) { // max 10 bolhas por clique
+    const bolha = document.createElement('div');
+    bolha.classList.add('bolha');
+    bolha.style.left = Math.random() * 100 + '%';
+    bolha.style.width = 5 + Math.random()*6 + 'px';
+    bolha.style.height = bolha.style.width;
+    bolha.style.animationDuration = 2 + Math.random()*2 + 's';
+    agua.appendChild(bolha);
+
+    setTimeout(() => {
+      bolha.remove();
+    }, 3000);
+  }
 }
 </script>
 

@@ -9,24 +9,26 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 50px;
-  background: #e0f7fa;
+  margin: 20px;
+  background: transparent;
 }
 
 h2 {
   color: #0077b6;
+  font-size: 16px;
+  margin-bottom: 10px;
 }
 
-/* Copo */
+/* Copo compacto */
 .copo {
-  width: 120px;
-  height: 400px;
-  border: 3px solid #0077b6;
-  border-radius: 15px;
+  width: 60px;
+  height: 200px;
+  border: 2px solid #0077b6;
+  border-radius: 10px;
   overflow: hidden;
   position: relative;
   background: #f0f0f0;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 /* Água */
@@ -38,31 +40,32 @@ h2 {
   background: linear-gradient(to top, #0096c7, #48cae4);
   transition: height 0.3s;
   overflow: hidden;
+  border-radius: 0 0 8px 8px;
 }
 
-/* Bolhas */
+/* Bolhas discretas */
 .bolha {
   position: absolute;
   bottom: 0;
-  width: 8px;
-  height: 8px;
+  width: 4px;
+  height: 4px;
   background: rgba(255,255,255,0.7);
   border-radius: 50%;
-  animation: subir 3s linear infinite;
+  animation: subir 2s linear infinite;
   opacity: 0.8;
 }
 
 @keyframes subir {
   0% { transform: translateY(0) scale(1); opacity: 0.8; }
-  100% { transform: translateY(-400px) scale(0.5); opacity: 0; }
+  100% { transform: translateY(-200px) scale(0.5); opacity: 0; }
 }
 
-/* Inputs */
+/* Inputs compactos */
 input, button {
-  padding: 8px;
-  font-size: 14px;
-  margin: 5px;
-  border-radius: 5px;
+  padding: 5px;
+  font-size: 12px;
+  margin: 3px;
+  border-radius: 4px;
   border: 1px solid #0077b6;
 }
 
@@ -89,15 +92,14 @@ button:hover {
 <input type="number" id="ml" min="1" step="1">
 <button onclick="adicionarAgua()">Adicionar</button>
 
-<p>Total bebido: <span id="total">0</span> ml</p>
+<p>Total: <span id="total">0</span> ml</p>
 
 <script>
-const capacidade = 2000; // 2 litros = 2000 ml
+const capacidade = 2000; // 2 litros
 let total = 0;
 
 const agua = document.getElementById('agua');
 const totalSpan = document.getElementById('total');
-const copo = document.querySelector('.copo');
 
 function adicionarAgua() {
   const ml = parseInt(document.getElementById('ml').value);
@@ -113,20 +115,19 @@ function adicionarAgua() {
   criarBolhas(ml);
 }
 
-// Cria bolhas conforme ml
 function criarBolhas(ml) {
-  for (let i = 0; i < Math.min(ml/20, 10); i++) { // max 10 bolhas por clique
+  for (let i = 0; i < Math.min(ml/20, 5); i++) { // max 5 bolhas por clique
     const bolha = document.createElement('div');
     bolha.classList.add('bolha');
     bolha.style.left = Math.random() * 100 + '%';
-    bolha.style.width = 5 + Math.random()*6 + 'px';
+    bolha.style.width = 3 + Math.random()*3 + 'px';
     bolha.style.height = bolha.style.width;
-    bolha.style.animationDuration = 2 + Math.random()*2 + 's';
+    bolha.style.animationDuration = 1.5 + Math.random()*1 + 's';
     agua.appendChild(bolha);
 
     setTimeout(() => {
       bolha.remove();
-    }, 3000);
+    }, 2000);
   }
 }
 </script>
